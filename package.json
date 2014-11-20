@@ -1,0 +1,15 @@
+{
+	"name": "config-server",
+	"descirption": "A server to get client config",
+	"private": true,
+	"version": "0.0.1",
+	"main": "index.js",
+	"dependencies": {
+		"body-parser": "^1.5.2",
+		"express": "^4.6.1",
+		"node-rsa": "^0.1.53",
+		"redis": "^0.11.0",
+		"node-rsa": "^0.1.53",
+		"superagent": "^0.20.0"
+	}
+}
