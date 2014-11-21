@@ -2,14 +2,13 @@ var app = require('express')(),
     model = require('./model'),
     logger = require('winston'),
     bodyParser = require('body-parser'),
-    NodeRSA = require('node-rsa');
-   
-
-function encrypt(publicKey, orig) {
-    var key = new NodeRSA(publicKey.replace(/\r\n/g, '\n')),
-        ret = key.encrypt(orig, 'base64');
-    return ret;
-}
+    NodeRSA = require('node-rsa'),
+    encrypt = function(publicKey, orig) {
+        var key = new NodeRSA(publicKey.replace(/\r\n/g, '\n')),
+            ret = key.encrypt(orig, 'base64');
+        return ret;
+    };
+    
 app.post('/config', bodyParser.json(), function(req, res){
     var pk, result;
     if(!(req && req.body && req.body["public_key"])) {
