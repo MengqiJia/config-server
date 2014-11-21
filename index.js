@@ -9,13 +9,13 @@ var app = require('express')(),
         return ret;
     };
     
-app.post('/config', bodyParser.json(), function(req, res){
+app.post('/config', bodyParser.text(), function(req, res){
     var pk, result;
-    if(!(req && req.body && req.body["public_key"])) {
+    if(!(req && req.body && req.body)) {
         logger.error("收到的请求不合法, " + req);
         return res.end("收到的请求不合法");
     }
-    pk = req.body["public_key"];
+    pk = req.body;
     logger.info("接到请求，public key参数为\n" + pk);
 
     model.getClientByPK(pk, function(client) {

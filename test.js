@@ -29,8 +29,8 @@ var redis = require('redis'),
 		before(index);
 
 		request.post("http://localhost:1234/config")
-		.type('application/json')
-		.send({public_key: pk})
+		.type('text')
+		.send(pk)
 		.end(function (res) {
 			test.ok(res);
 			console.log(res.text);
