@@ -1,37 +1,47 @@
-var express, redis, http, app, db, bodyParser, NodeRSA;
-express = require('express');
+var app = require('express')(),
+    model = require('./model'),
+    logger = require('winston'),
+    bodyParser = require('body-parser'),
+    NodeRSA = require('node-rsa');
+   
 
-app = express();
-
-redis = require('redis');
-db = redis.createClient();
-
-bodyParser = require('body-parser');
-NodeRSA = require('node-rsa');
-
+function encrypt(publicKey, orig) {
+    var key = new NodeRSA(publicKey.replace(/\r\n/g, '\n')),
+        ret = key.encrypt(orig, 'base64');
+    return ret;
+}
 app.post('/config', bodyParser.json(), function(req, res){
+    var pk, result;
     if(!(req && req.body && req.body["public_key"])) {
-        res.send("收到的请求不合法");
-        return;
+        logger.error("收到的请求不合法, " + req);
+        return res.end("收到的请求不合法");
     }
-    var pk = req.body["public_key"];
-    db.hgetall('pk2cc', function(err, obj){
-        if(err) {
-            res.send("Error occured!" + err);
+    pk = req.body["public_key"];
+    logger.info("接到请求，public key参数为\n" + pk);
+
+    model.getClientByPK(pk, function(client) {
+        if(!client || client.value == undefined) {
+            logger.error(client.error || "请求Client时发生了错误, client = " + client);
+            return res.end(client.error || "请求Client时发生了错误, client = " + client);
         }
-        else {
-            if(obj && obj[pk]) {
-                res.send(obj[pk]);
+        
+        model.getConfigStrByClient(client.value, function(config) {
+            var ret;
+            if(!config || !config.value) {
+                logger.error(config.error || "请求config时发生了错误, 参数 " + client.value);
+                return res.end(config.error || "请求config时发生了错误, 参数 " + client.value);
             }
-            else {
-                res.send("No valid data for" + pk);
-            }
-        }
+
+            logger.info("请求处理结束，结果为：\n" + config.value);
+            ret = encrypt(pk, config.value);
+            logger.info("ret = " + ret);
+            res.send(ret);
+        });
     });
 });
 
 app.use(bodyParser);
 app.listen(8000, function () {
-    console.log("config server started!");
+    logger.info("config server started!");
 })
 
