@@ -40,7 +40,7 @@ model.getConfigStrByClient = function(client, next) {
 		next(ret);
 	});
 }
-
+// to improve
 model.getConfigObjByClient = function(client, next) {
 	db.hgetall(client, function(err, config) {
 		var ret = {};

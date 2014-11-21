@@ -10,36 +10,36 @@ var redis = require('redis'),
     before = function(i) {
     	var test = config.test[i];
 		pk = require('fs').readFileSync(path.join(__dirname, test.pk.path), 'utf-8');
+		console.log(pk);
 		key = new NodeRSA(pk.replace(/\r\n/g, '\n'));
 		client = test.client;
-		configuration = test.config;
+		clients = test.clients;
 
 		db.set("pk2cc:" + pk, client);
-		db.set("cc2clients:" + client, JSON.stringify(configuration));
-		db.hmset(client, configuration);
+		db.set("cc2clients:" + client, JSON.stringify(clients));
 	},
 	after = function() {
 		if(db) {
 			db.del("pk2cc:" + pk);
 			db.del("cc2cilents:" + client);
-			db.del(client);
 			db.end();
 		}
 	},
-	run = function(index, fun) {
+	run = function(index, test) {
 		before(index);
 
-		request.post("http://localhost:8000/config")
+		request.post("http://localhost:1234/config")
 		.type('application/json')
 		.send({public_key: pk})
 		.end(function (res) {
-			fun.ok(res);
-			fun.ok(res.text);
+			test.ok(res);
+			console.log(res.text);
+			test.ok(res.text);
 
-			var decrypted = key.decrypt(res.text, 'utf-8');
+			var decrypted = key.decrypt(res.text);
 			console.log(decrypted);
 			
-			fun.equal(decrypted, JSON.stringify(configuration));
+			test.equal(decrypted, JSON.stringify(clients));
 
 			after();
 		})
@@ -51,7 +51,7 @@ test('functional test', function(fun) {
 	for(var i=0; i<len; i++) {
 		run(i, fun);
 	}
-})
+});
 
 
 

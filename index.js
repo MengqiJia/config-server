@@ -33,6 +33,7 @@ app.post('/config', bodyParser.json(), function(req, res){
 
             logger.info("请求处理结束，结果为：\n" + config.value);
             ret = encrypt(pk, config.value);
+            logger.info(config.value);
             logger.info("ret = " + ret);
             res.send(ret);
         });
@@ -40,7 +41,7 @@ app.post('/config', bodyParser.json(), function(req, res){
 });
 
 app.use(bodyParser);
-app.listen(8000, function () {
+app.listen(1234, function () {
     logger.info("config server started!");
 })
 
