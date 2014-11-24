@@ -8,6 +8,7 @@ model.getClientByPK = function(pk, next) {
 		var ret = {};
         if(err) {
         	ret.error = "Error occured when try to get client by public key!\n" + err;
+        	logger.error(ret.error);
         }
         else {
             if(value) {
@@ -40,20 +41,31 @@ model.getConfigStrByClient = function(client, next) {
 		next(ret);
 	});
 }
-// to improve
-model.getConfigObjByClient = function(client, next) {
-	db.hgetall(client, function(err, config) {
+model.saveConfigure = function(clientID, publicKey, clients) {
+	logger.info("new configure: \nclientID = " + clientID + " publicKey = " + publicKey + " clients = " + clients);
+	
+	db.set('cc2pk:' + clientID, publicKey);
+	db.set('pk2cc:' + publicKey, clientID);
+	if(!clients) {
+		clients = {"clients" :[]};
+	}
+	db.set('cc2clients:' + clientID, clients.toString());	
+}
+
+model.getConfigure = function(clientID, next) {
+	db.get('cc2pk:' + clientID, function(err, value) {
 		var ret = {};
 		if(err) {
-			ret.error = "Error occured when try to get config object by client\n" + err;
+			ret.error = "Error occured when try to get config info by client!\n" + err;
+			logger.error(ret.error);
 		}
 		else {
-			if(config) {
-				logger.info(console);
-				ret.value  = config;
+			if(value) {
+				logger.info(value);
+				ret.value = value;
 			}
 			else {
-				ret.error = "There is no config info for " + client;
+				ret.error = "没有请求数据" + clientID;
 			}
 		}
 		next(ret);
