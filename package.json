@@ -1,17 +1,18 @@
 {
-	"name": "config-server",
-	"descirption": "A server to get client config",
-	"private": true,
-	"version": "0.0.1",
-	"main": "index.js",
-	"dependencies": {
-		"body-parser": "^1.5.2",
-		"config": "^1.8.1",
-		"express": "^4.6.1",
-		"node-rsa": "^0.1.53",
-		"redis": "^0.11.0",
-		"superagent": "^0.20.0",
-		"tape": "^3.0.3",
-		"winston": "^0.8.3"
-	}
+  "name": "config-server",
+  "descirption": "A server to get client config",
+  "private": true,
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.5.2",
+    "config": "^1.8.1",
+    "express": "^4.6.1",
+    "hbs": "^2.7.0",
+    "node-rsa": "^0.1.53",
+    "redis": "^0.11.0",
+    "superagent": "^0.20.0",
+    "tape": "^3.0.3",
+    "winston": "^0.8.3"
+  }
 }

@@ -1,14 +1,27 @@
-var app = require('express')(),
-    model = require('./model'),
-    logger = require('winston'),
-    bodyParser = require('body-parser'),
-    NodeRSA = require('node-rsa'),
-    encrypt = function(publicKey, orig) {
+var express = require('express')
+var app = express();
+var model = require('./model');
+var logger = require('winston');
+var bodyParser = require('body-parser');
+var clients = require('./clients');
+var NodeRSA = require('node-rsa');
+var encrypt = function(publicKey, orig) {
         var key = new NodeRSA(publicKey.replace(/\r\n/g, '\n')),
             ret = key.encrypt(orig, 'base64');
         return ret;
     };
 
+// 加载hbs模块
+var hbs = require('hbs');
+
+// 指定模板文件的后缀名为html
+app.set('view engine', 'html');
+
+// 运行hbs模块
+app.engine('html', hbs.__express);
+app.use(express.static('css'));
+
+app.use(bodyParser());
 
 app.post('/config', bodyParser.text(), function(req, res){
     var pk, result;
@@ -41,36 +54,7 @@ app.post('/config', bodyParser.text(), function(req, res){
     });
 });
 
-app.get('/', function(req, res) {
-   // res.setHeader('Content-Type', 'text/html');
-    res.sendFile(__dirname + '/index.html');
-});
-
-app.get('/get', bodyParser.json(), function(req, res) {
-  //  res.setHeader('Content-Type', 'application/json');
-    model.getConfigure(req.body['client_id'], function(config) {
-        res.send(config);
-    })
-});
-
-app.post('/add', bodyParser.json(), function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    console.log(req.body);
-    if(!(req && req.body)) {
-        logger.error("收到的请求不合法, " + req);
-        return res.end("收到的请求不合法");
-    }
-
-    var clientId = req.body['client_id'];
-    var pk = req.body['public_key'];
-    var clients = req.body["clients"];
-    if(clientId && pk && clients) {
-        model.saveConfigure(clientId, pk, clients);
-    }
-    res.end();
-});
-
-app.use(bodyParser);
+app.use('/', clients);
 
 app.listen(1234, function () {
     logger.info("config server started!");
