@@ -5,7 +5,12 @@ var bodyParser = require('body-parser');
 var model = require('./model');
 
 exports = module.exports = router;
+
 router.get('/', function(req, res) {
+	res.send("请登录");
+});
+
+router.get('/index', function(req, res) {
 	var clientList = [];
 	model.getClientIDs(function(clientID) {
 		clientList.push({
@@ -52,3 +57,5 @@ router.post('/save', bodyParser.json(), function(req, res) {
 	}
 	res.send(ret);
 });
+
+

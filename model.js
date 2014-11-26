@@ -1,6 +1,43 @@
-var db = require('redis').createClient(),
-	logger = require('winston'),
-	model = exports = module.exports = {};
+var config = require('config');
+var db = require('redis').createClient(config.database.port);
+var logger = require('winston');
+var model = exports = module.exports = {};
+var getPublicKey = function(clientID, next) {
+	console.log("Here");
+	db.get('cc2pk:' + clientID, function(err, value) {
+		var ret = {};
+		if (err) {
+			ret.error = "Error occured when try to get pk info by client!\n" + err;
+			logger.error(ret.error);
+		} else {
+			if (value) {
+				logger.info(value);
+				ret.value = value;
+			} else {
+				ret.error = "没有请求数据" + clientID;
+			}
+		}
+		next(ret);
+	});
+}
+
+var getConfigure = function(clientID, next) {
+	db.get('cc2clients:' + clientID, function(err, value) {
+		var ret = {};
+		if (err) {
+			ret.error = "Error occured when try to get config info by client!\n" + err;
+			logger.error(ret.error);
+		} else {
+			if (value) {
+				logger.info(value);
+				ret.value = value;
+			} else {
+				ret.error = "没有请求数据" + clientID;
+			}
+		}
+		next(ret);
+	});
+}
 
 model.getClientByPK = function(pk, next) {
 	logger.info("pk = " + pk);
@@ -58,43 +95,6 @@ model.getClientIDs = function(next) {
 			console.log("id = " + id);
 			next(id.split(":")[1]);
 		});
-	});
-}
-
-var getPublicKey = function(clientID, next) {
-	console.log("Here");
-	db.get('cc2pk:' + clientID, function(err, value) {
-		var ret = {};
-		if (err) {
-			ret.error = "Error occured when try to get pk info by client!\n" + err;
-			logger.error(ret.error);
-		} else {
-			if (value) {
-				logger.info(value);
-				ret.value = value;
-			} else {
-				ret.error = "没有请求数据" + clientID;
-			}
-		}
-		next(ret);
-	});
-}
-
-var getConfigure = function(clientID, next) {
-	db.get('cc2clients:' + clientID, function(err, value) {
-		var ret = {};
-		if (err) {
-			ret.error = "Error occured when try to get config info by client!\n" + err;
-			logger.error(ret.error);
-		} else {
-			if (value) {
-				logger.info(value);
-				ret.value = value;
-			} else {
-				ret.error = "没有请求数据" + clientID;
-			}
-		}
-		next(ret);
 	});
 }
 
