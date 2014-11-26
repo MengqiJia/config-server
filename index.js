@@ -10,17 +10,11 @@ var encrypt = function(publicKey, orig) {
             ret = key.encrypt(orig, 'base64');
         return ret;
     };
-
-// 加载hbs模块
 var hbs = require('hbs');
 
-// 指定模板文件的后缀名为html
 app.set('view engine', 'html');
-
-// 运行hbs模块
 app.engine('html', hbs.__express);
-app.use(express.static('css'));
-
+app.use(express.static('public'));
 app.use(bodyParser());
 
 app.post('/config', bodyParser.text(), function(req, res){

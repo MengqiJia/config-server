@@ -3,23 +3,13 @@
   <head>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link href="/style.css" rel="stylesheet">
-    <title>Configure Server</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <title>修改 {{client_id}} 配置</title>
   </head>
   <body>
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <h1>当前 client 配置</h1>
-      <div class="highlight">
-      {{#each client}}
-       <p>
-          <a href="/get?client_id={{client_id}}">{{client_id}}</a><br/>
-       </p>
-      {{/each}}
-      </div>
-    </div>
-    <div class="col-md-6 col-md-offset-3">      
-      <h1>新增 client 配置</h1>
+      <h1>修改 {{client_id}} 配置</h1>
       <div class="highlight">
         <div class="input-group full-width">
           <label for="clientID">用户 ID</label>
@@ -41,14 +31,6 @@
   </div>
     
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script type="text/javascript">
-  $('#submit').click(function() {
-    $.post("/save",{
-     "client_id": $("#clientID").val().trim(),
-     "public_key": $("#publicKey").val().trim(),
-     "clients" : $("#config").val().trim()
-    }, "json");
-  });
-</script>
+<script src="/js/submit.js" type="text/javascript"></script>
 </body>
 </html>

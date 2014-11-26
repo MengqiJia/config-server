@@ -105,10 +105,12 @@ model.getClientInfo = function(clientID, next) {
 		getConfigure(clientID, function(config) {
 			var val = config.value;
 			var obj = JSON.parse(val);
-			ret["clients"] = JSON.stringify(obj);
+			logger.info(JSON.stringify(obj));
+			logger.info(JSON.stringify(obj, null, 4));
+
+			ret["clients"] = JSON.stringify(obj, null, 4);
 			ret["client_id"] = clientID;
 			next(ret);
 		})
-	})
-	
+	});
 }

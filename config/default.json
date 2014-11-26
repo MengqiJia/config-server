@@ -5,24 +5,38 @@
       "path": "public_key"
     },
     "client": "client_test",
-    "clients": {
-      "name": "node",
-      "id": "bddc1dbb-0fe9-44ef-a3dc-6bdce55bd95e",
-      "secret": "118b58a26b5759bc68db33f196430d567ec4fd03e38a105cf8e6c8b75964a950",
-      "access_token": "c7b2f60ea19e74d6fe99058ee0c7a42d8caba50cb0e82e8344b99bfe4a3e4148"
-    }
+    "clients": [
+      {
+        "name": "node",
+        "id": "bddc1dbb-0fe9-44ef-a3dc-6bdce55bd95e",
+        "secret": "118b58a26b5759bc68db33f196430d567ec4fd03e38a105cf8e6c8b75964a950",
+        "access_token": "c7b2f60ea19e74d6fe99058ee0c7a42d8caba50cb0e82e8344b99bfe4a3e4148"
+      },
+      {
+        "name": "mobile",
+        "id": "f037935b-96cf-47f3-82d4-cf4b334cf582",
+        "secret": "16e6958a5c7988d28f64fb923ebac0874eab6a9e327353adb95dbb0862a48578"
+      }
+    ]
   },
   {
     "pk": {
       "path": "public_key"
     },
-    "client": "client_test",
-    "clients": {
-      "name": "node",
-      "id": "bddc1dbb-0fe9-44ef-a3dc-6bdce55bd95e",
-      "secret": "118b58a26b5759bc68db33f196430d567ec4fd03e38a105cf8e6c8b75964a950",
-      "access_token": "c7b2f60ea19e74d6fe99058ee0c7a42d8caba50cb0e82e8344b99bfe4a3e4148"
-    }
+    "client": "client_test2",
+    "clients": [
+      {
+        "name": "node",
+        "id": "bddc1dbb-0fe9-44ef-a3dc-6bdce55bd95e",
+        "secret": "118b58a26b5759bc68db33f196430d567ec4fd03e38a105cf8e6c8b75964a950",
+        "access_token": "c7b2f60ea19e74d6fe99058ee0c7a42d8caba50cb0e82e8344b99bfe4a3e4148"
+      },
+      {
+        "name": "mobile",
+        "id": "f037935b-96cf-47f3-82d4-cf4b334cf582",
+        "secret": "16e6958a5c7988d28f64fb923ebac0874eab6a9e327353adb95dbb0862a48578"
+      }
+    ]
   }
   ]
 }
