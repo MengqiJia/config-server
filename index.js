@@ -109,7 +109,7 @@ app.all('/get', isLoggedIn);
 
 app.use('/', clients);
 
-app.listen(1234, function() {
+app.listen(process.env.PORT || config.port || 1234, function() {
     logger.info("config server started!");
 })
 
