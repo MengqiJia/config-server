@@ -1,1 +1,1 @@
-module.exports = require('redis').createClient(config.database.port);
+module.exports = require('redis').createClient(require('config').database.port);
