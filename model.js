@@ -1,5 +1,5 @@
 var config = require('config');
-var db = require('redis').createClient(config.database.port);
+var db = require('./db');
 var logger = require('winston');
 var model = exports = module.exports = {};
 var getPublicKey = function(clientID, next) {
