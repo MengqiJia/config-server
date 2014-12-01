@@ -96,8 +96,7 @@ app.post('/config', bodyParser.text(), function(req, res) {
 
             logger.info("请求处理结束，结果为：\n" + config.value);
             var clientsObj = JSON.parse(config.value);
-            ret = encrypt(pk, clientsObj.clients);
-            logger.info(clientsObj);
+            ret = encrypt(pk, config.value);
             logger.info("ret = " + ret);
             res.send(ret);
         });
