@@ -4,6 +4,11 @@
   "private": true,
   "version": "0.0.1",
   "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production PORT=7070 nohup node master &",
+    "reload": "kill -s USR1 `cat cs.pid`",
+    "stop": "kill -s TERM `cat cs.pid`"
+  },
   "dependencies": {
     "body-parser": "^1.5.2",
     "config": "^1.8.1",
