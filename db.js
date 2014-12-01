@@ -1,0 +1,1 @@
+module.exports = require('redis').createClient(require('config').database.port);

@@ -1,4 +1,5 @@
-var express = require('express')
+/*jshint node: true*/
+var express = require('express');
 var app = express();
 var model = require('./model');
 var logger = require('winston');
@@ -10,6 +11,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 var session = require('express-session');
+var RedisStore  = require('connect-redis')(session); 
 var cookieParser = require('cookie-parser');
 var config = require('config');
 
@@ -56,8 +58,10 @@ app.use(express.static('public'));
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser());
 app.use(session({
-    secret: 'ilovescotchscotchyscotchscotch'
-})); // session secret
+    secret: 'ilovescotchscotchyscotchscotch',
+    cookie: { maxAge: 2628000000 },
+    store: new RedisStore({client: require('./db')})
+}));
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
@@ -73,7 +77,7 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/config', bodyParser.text(), function(req, res) {
-    var pk, result;
+    var pk;
     if (!(req && req.body)) {
         logger.error("收到的请求不合法, " + req);
         return res.end("收到的请求不合法");
@@ -82,7 +86,7 @@ app.post('/config', bodyParser.text(), function(req, res) {
     logger.info("接到请求，public key参数为\n" + pk);
     pk = pk.replace(/\r\n/g, '\n');
     model.getClientByPK(pk, function(client) {
-        if (!client || client.value == undefined) {
+        if (!client || !client.value) {
             logger.error(client.error || "请求Client时发生了错误, client = " + client);
             return res.end(client.error || "请求Client时发生了错误, client = " + client);
         }
@@ -95,9 +99,7 @@ app.post('/config', bodyParser.text(), function(req, res) {
             }
 
             logger.info("请求处理结束，结果为：\n" + config.value);
-            var clientsObj = JSON.parse(config.value);
-            ret = encrypt(pk, clientsObj.clients);
-            logger.info(clientsObj);
+            ret = encrypt(pk, config.value);
             logger.info("ret = " + ret);
             res.send(ret);
         });
@@ -109,14 +111,16 @@ app.all('/get', isLoggedIn);
 
 app.use('/', clients);
 
-app.listen(1234, function() {
-    logger.info("config server started!");
-})
-
+module.exports = app;
+if (require.main === module) {
+  app.listen(process.env.PORT || config.port || 1234, function() {
+      logger.info("config server started!");
+  });
+}
 
 function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated())
+    if (req.isAuthenticated()) {
         return next();
-
+    }
     res.redirect('/login');
 }
