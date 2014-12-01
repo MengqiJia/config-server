@@ -108,10 +108,12 @@ app.all('/get', isLoggedIn);
 
 app.use('/', clients);
 
-app.listen(process.env.PORT || config.port || 1234, function() {
-    logger.info("config server started!");
-})
-
+module.exports = app;
+if (require.main === module) {
+  app.listen(process.env.PORT || config.port || 1234, function() {
+      logger.info("config server started!");
+  })
+}
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
