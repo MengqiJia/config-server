@@ -11,6 +11,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 var session = require('express-session');
+var RedisStore  = require('connect-redis')(session); 
 var cookieParser = require('cookie-parser');
 var config = require('config');
 
@@ -59,11 +60,7 @@ app.use(bodyParser());
 app.use(session({
     secret: 'ilovescotchscotchyscotchscotch',
     cookie: { maxAge: 2628000000 },
-    store: new (require('express-sessions'))({
-        storage: 'redis',
-        instance: require('./db'),
-        expire: 86400 // optional
-    })
+    store: new RedisStore({client: require('./db')})
 })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
