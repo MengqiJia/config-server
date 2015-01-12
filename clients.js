@@ -3,17 +3,8 @@ var express = require('express'),
     router = express.Router(),
     bodyParser = require('body-parser'),
     model = require('./model'),
-    crypto = require('crypto'),
+    clientsConfig = require('./clients_config'),
     exports = module.exports = router;
-
-function generateUUID() {
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0,
-            v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-    return uuid;
-};
 
 router.get('/', function(req, res) {
     res.send("请登录");
@@ -27,21 +18,9 @@ router.get('/index', function(req, res) {
         });
     });
 
-    var clientsConfig = [{
-        "name": "node"
-    }, {
-        "name": "mobile"
-    }];
-
-    clientsConfig.forEach(function(ele) {
-        ele.id = generateUUID();
-        ele.secret = crypto.randomBytes(32).toString('hex');
-    });
-    console.log(JSON.stringify(clientsConfig, null, 4));
-
     res.render(__dirname + '/public/views/index.html', {
         client: clientList,
-        clients: JSON.stringify(clientsConfig, null, 4)
+        clients: clientsConfig.get()
     });
 });
 
