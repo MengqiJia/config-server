@@ -3,7 +3,7 @@ var express = require('express'),
     router = express.Router(),
     bodyParser = require('body-parser'),
     model = require('./model'),
-    clientsConfig = require('./clients_config'),
+    clientsConfig = require('gencc'),
     exports = module.exports = router;
 
 router.get('/', function(req, res) {
